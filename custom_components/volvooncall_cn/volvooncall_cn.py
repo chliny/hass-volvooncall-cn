@@ -20,6 +20,7 @@ from .proto.invocation_pb2 import UnlockReq, UnlockType
 from .proto.invocation_pb2 import TailgateControlReq
 from .proto.invocation_pb2 import SunroofControlReq
 from .proto.invocation_pb2 import UpdateStatusReq
+from .proto.invocation_pb2 import PreCleaningReq
 from .proto.odometer_pb2_grpc import OdometerServiceStub
 from .proto.odometer_pb2 import GetOdometerReq, GetOdometerResp
 from .proto.availability_pb2_grpc import AvailabilityServiceStub
@@ -31,6 +32,8 @@ from .proto.engineremotestart_pb2 import GetEngineRemoteStartReq, GetEngineRemot
 from .proto.car_preferences_pb2_grpc import CarPreferencesStub
 from .proto.car_preferences_pb2 import GetPreferencesReq, GetPreferencesResp
 from .proto.car_preferences_pb2 import UpdatePreferencesReq, UpdatePreferencesResp, Preference
+from .proto.precleaning_pb2_grpc import PreCleaningServiceStub
+from .proto.precleaning_pb2 import GetPreCleaningReq, GetPreCleaningResp
 
 
 _LOGGER = logging.getLogger(__name__)
@@ -285,6 +288,27 @@ class VehicleAPI(VehicleBaseAPI):
             _LOGGER.debug(res)
             break
         return res
+
+    async def get_precleaning(self, vin: str):
+        stub = PreCleaningServiceStub(self.channel)
+        req = GetPreCleaningReq(id="", vin=vin)
+        metadata: list = [("vin", vin)]
+        res: GetPreCleaningResp = GetPreCleaningResp()
+        for res in stub.GetPreCleaning(req, metadata=metadata, timeout=TIMEOUT.seconds):
+            _LOGGER.debug(res)
+            break
+        return res
+
+    async def precleaning_contorl(self, vin: str, is_start: bool):
+        stub = InvocationServiceStub(self.channel)
+        req_header = invocationHead(vin=vin)
+        req = PreCleaningReq(head=req_header, start=is_start)
+        res = invocationCommResp()
+        for res in stub.PreCleaning(req):
+            _LOGGER.debug(res)
+            self.raise_invocation_fail(res.data.status)
+            break
+        return
 
 
 class Vehicle(object):

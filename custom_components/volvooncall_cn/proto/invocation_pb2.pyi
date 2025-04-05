@@ -153,3 +153,11 @@ class UpdateStatusReq(_message.Message):
     HEAD_FIELD_NUMBER: _ClassVar[int]
     head: invocationHead
     def __init__(self, head: _Optional[_Union[invocationHead, _Mapping]] = ...) -> None: ...
+
+class PreCleaningReq(_message.Message):
+    __slots__ = ("head", "start")
+    HEAD_FIELD_NUMBER: _ClassVar[int]
+    START_FIELD_NUMBER: _ClassVar[int]
+    head: invocationHead
+    start: bool
+    def __init__(self, head: _Optional[_Union[invocationHead, _Mapping]] = ..., start: bool = ...) -> None: ...

@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package services.vehiclestates.precleaning;
+
+service PreCleaningService {
+  rpc GetPreCleaning(GetPreCleaningReq) returns(stream GetPreCleaningResp) {}
+}
+
+message Timestamp {
+  int32 seconds = 1;
+  int32 nanos = 2;
+}
+
+
+message GetPreCleaningReq{
+  string id = 1;
+  string vin = 2;
+
+}
+
+enum StartReason {
+  START_REASON_UNSPECIFIED = 0;
+  REMOTE = 1;
+  MANUALLY_FROM_CAR = 2;
+}
+
+enum RunningStatus {
+  RUNNING_STATUS_UNSPECIFIED = 0;
+  ON = 1;
+  OFF = 2;
+  PENDING = 3;
+
+}
+
+enum ErrorType {
+    ERROR_TYPE_UNSPECIFIED = 0;
+    GENERIC_ERROR = 1;
+    INTERRUPTED = 2;
+}
+
+message PreCleaningData{
+  Timestamp timestamp = 1;
+  Timestamp lastCycleCompleted = 2;
+  Timestamp measurementDate = 3;
+  Timestamp startedAt = 4;
+  Timestamp endingAt = 5;
+  RunningStatus runningStatus = 6;
+  StartReason startReason = 7;
+  bool lastCycleValid = 8;
+  int32 measuredAirQualityIndex = 9;
+  int32 measuredParticulateMatter25 = 10;
+  int32 runtimeLeftMinutes = 11;
+  ErrorType error = 13;
+}
+
+message GetPreCleaningResp {
+  string id = 1;
+  string vin = 2;
+  PreCleaningData data = 3;
+}

@@ -74,6 +74,11 @@ class InvocationServiceStub(object):
                 request_serializer=invocation__pb2.UpdateStatusReq.SerializeToString,
                 response_deserializer=invocation__pb2.invocationCommResp.FromString,
                 _registered_method=True)
+        self.PreCleaning = channel.unary_stream(
+                '/invocation.InvocationService/PreCleaning',
+                request_serializer=invocation__pb2.PreCleaningReq.SerializeToString,
+                response_deserializer=invocation__pb2.invocationCommResp.FromString,
+                _registered_method=True)
 
 
 class InvocationServiceServicer(object):
@@ -127,6 +132,12 @@ class InvocationServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def PreCleaning(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_InvocationServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -168,6 +179,11 @@ def add_InvocationServiceServicer_to_server(servicer, server):
             'UpdateStatus': grpc.unary_stream_rpc_method_handler(
                     servicer.UpdateStatus,
                     request_deserializer=invocation__pb2.UpdateStatusReq.FromString,
+                    response_serializer=invocation__pb2.invocationCommResp.SerializeToString,
+            ),
+            'PreCleaning': grpc.unary_stream_rpc_method_handler(
+                    servicer.PreCleaning,
+                    request_deserializer=invocation__pb2.PreCleaningReq.FromString,
                     response_serializer=invocation__pb2.invocationCommResp.SerializeToString,
             ),
     }
@@ -386,6 +402,33 @@ class InvocationService(object):
             target,
             '/invocation.InvocationService/UpdateStatus',
             invocation__pb2.UpdateStatusReq.SerializeToString,
+            invocation__pb2.invocationCommResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def PreCleaning(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(
+            request,
+            target,
+            '/invocation.InvocationService/PreCleaning',
+            invocation__pb2.PreCleaningReq.SerializeToString,
             invocation__pb2.invocationCommResp.FromString,
             options,
             channel_credentials,

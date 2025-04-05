@@ -11,6 +11,7 @@ service InvocationService {
   rpc TailgateControl(TailgateControlReq) returns (stream invocationCommResp) {}
   rpc SunroofControl(SunroofControlReq) returns(stream invocationCommResp) {}
   rpc UpdateStatus(UpdateStatusReq) returns(stream invocationCommResp) {}
+  rpc PreCleaning(PreCleaningReq) returns(stream invocationCommResp) {}
 }
 
 message invocationHead{
@@ -104,4 +105,9 @@ message SunroofControlReq{
 
 message UpdateStatusReq{
   invocationHead head = 1;
+}
+
+message PreCleaningReq {
+  invocationHead head = 1;
+  bool start = 2;
 }
